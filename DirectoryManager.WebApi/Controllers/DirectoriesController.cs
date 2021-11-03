@@ -9,12 +9,18 @@ namespace DirectoryManager.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class Directories : ControllerBase
+    public class DirectoriesController : ControllerBase
     {
 
 
-        public Directories()
+        public DirectoriesController()
         { 
+        }
+
+        [HttpGet]
+        public IActionResult GetDirectories()
+        {
+
         }
 
  
