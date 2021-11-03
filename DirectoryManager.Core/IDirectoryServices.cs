@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DirectoryManager.Core
 {
-    interface IDirectoryServices
+    public interface IDirectoryServices
     {
         List<Directory> GetDirectories();
     }

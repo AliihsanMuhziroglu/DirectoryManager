@@ -7,7 +7,10 @@ namespace DirectoryManager.Core
     {
         public List<Directory> GetDirectories()
         {
-            throw new NotImplementedException();
+            return new List<Directory>
+            {
+                new Directory{Name = "test", Company = "setur"}
+            };
         }
     }
 }

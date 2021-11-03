@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DirectoryManager.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,16 @@ namespace DirectoryManager.WebApi.Controllers
     public class DirectoriesController : ControllerBase
     {
 
-
-        public DirectoriesController()
-        { 
+        private readonly IDirectoryServices _directoryServices;
+        public DirectoriesController(IDirectoryServices directoryServices)
+        {
+            _directoryServices = directoryServices;
         }
 
         [HttpGet]
         public IActionResult GetDirectories()
         {
-
+            return Ok(_directoryServices.GetDirectories());
         }
 
  
