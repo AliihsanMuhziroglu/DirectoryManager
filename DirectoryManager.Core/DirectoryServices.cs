@@ -11,7 +11,15 @@ namespace DirectoryManager.Core
         {
             _directories = dbClient.GetDirectoryCollection();
         }
+
+        public Directory AddDirectory(Directory directory)
+        {
+            _directories.InsertOne(directory); 
+            return directory;
+        }
+
         public List<Directory> GetDirectories() => _directories.Find(directory => true).ToList();
 
+        public Directory GetDirectory(string id) => _directories.Find(directory => directory.UUID == id).First();
     }
 }

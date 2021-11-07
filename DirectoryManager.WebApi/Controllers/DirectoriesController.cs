@@ -25,6 +25,20 @@ namespace DirectoryManager.WebApi.Controllers
             return Ok(_directoryServices.GetDirectories());
         }
 
+        [HttpGet("{id}",Name ="GetBook")]
+        public IActionResult GetDirectory(string id)
+        {
+            return Ok(_directoryServices.GetDirectory(id));
+        }
+        
+
+        [HttpPost]
+        public IActionResult AddDirectory(Directory directory)
+        {
+            _directoryServices.AddDirectory(directory);
+            return CreatedAtRoute("GetDirectory", new { id = directory.UUID }, directory);
+        }
+
  
     }
 }
