@@ -1,16 +1,17 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 
 namespace DirectoryManager.Core
 {
     public class DirectoryServices : IDirectoryServices
     {
-        public List<Directory> GetDirectories()
+        private readonly IMongoCollection<Directory> _directories;
+        public DirectoryServices(IDbClient dbClient)
         {
-            return new List<Directory>
-            {
-                new Directory{Name = "test", Company = "setur"}
-            };
+            _directories = dbClient.GetDirectoryCollection();
         }
+        public List<Directory> GetDirectories() => _directories.Find(directory => true).ToList();
+
     }
 }
