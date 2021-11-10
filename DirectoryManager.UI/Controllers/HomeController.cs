@@ -45,7 +45,7 @@ namespace DirectoryManager.UI.Controllers
                 var results = res.Content.ReadAsStringAsync().Result;
                 directory = JsonConvert.DeserializeObject<DirectoryData>(results);
             }
-            return View(directory.ContactList);
+            return View(directory.ContactList ?? new List<ContactInfoData>());
         }
 
 
