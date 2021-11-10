@@ -24,28 +24,30 @@ namespace DirectoryManager.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<DirectoryData> directories = new List<DirectoryData>();
+            List<DirectoryModel> directories = new List<DirectoryModel>();
             HttpClient client = _directoryApi.Initial();
             HttpResponseMessage res = await client.GetAsync("Directories");
             if (res.IsSuccessStatusCode)
             {
                 var results = res.Content.ReadAsStringAsync().Result;
-                directories = JsonConvert.DeserializeObject<List<DirectoryData>>(results);
+                directories = JsonConvert.DeserializeObject<List<DirectoryModel>>(results);
             }
             return View(directories);
         }
 
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(DirectoryModel directoryData)
         {
-            var directory = new DirectoryData();
+            var directory = new DirectoryModel();
             HttpClient client = _directoryApi.Initial();
-            HttpResponseMessage res = await client.GetAsync($"Directories/{id}");
+            HttpResponseMessage res = await client.GetAsync($"Directories/{directoryData.UUID}");
             if (res.IsSuccessStatusCode)
             {
                 var results = res.Content.ReadAsStringAsync().Result;
-                directory = JsonConvert.DeserializeObject<DirectoryData>(results);
+                directory = JsonConvert.DeserializeObject<DirectoryModel>(results);
             }
-            return View(directory.ContactList ?? new List<ContactInfoData>());
+            if (directory.ContactList == null)
+                directory.ContactList = new List<ContactInfoModel>();
+            return View(directory);
         }
 
 
@@ -55,10 +57,10 @@ namespace DirectoryManager.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(DirectoryData directory)
+        public IActionResult Create(DirectoryModel directory)
         {
             HttpClient client = _directoryApi.Initial();
-            var postTask = client.PostAsJsonAsync<DirectoryData>("Directories", directory);
+            var postTask = client.PostAsJsonAsync<DirectoryModel>("Directories", directory);
             postTask.Wait();
 
             var result = postTask.Result;
@@ -72,22 +74,56 @@ namespace DirectoryManager.UI.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
-            var directory = new DirectoryData();
+            var directory = new DirectoryModel();
             HttpClient client = _directoryApi.Initial();
             HttpResponseMessage res = await client.DeleteAsync($"Directories/{id}");
             return RedirectToAction("Index");
         }
 
-        public IActionResult Edit(DirectoryData directory)
+        public IActionResult Edit(DirectoryModel directory)
         {
             return View(directory);
         }
 
         [HttpPost]
-        public IActionResult EditData(DirectoryData directory)
+        public IActionResult EditData(DirectoryModel directory)
         {
             HttpClient client = _directoryApi.Initial();
-            var postTask = client.PutAsJsonAsync<DirectoryData>("Directories", directory);
+            var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", directory);
+            postTask.Wait();
+
+            var result = postTask.Result;
+            if (result.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        }
+
+
+        public IActionResult CreateContactInfo(DirectoryModel directory)
+        {
+            var createContactInfoModel = new CreateContactInfoModel
+            {
+                directory = directory,
+                contactInfo = new ContactInfoModel()
+            };
+            return View(createContactInfoModel);
+        }
+
+
+ 
+
+
+        [HttpPost]
+        public IActionResult CreateContactInfoData(CreateContactInfoModel data)
+        {
+            if (data.directory.ContactList == null)
+                data.directory.ContactList = new List<ContactInfoModel>();
+            data.directory.ContactList.Add(data.contactInfo);
+            HttpClient client = _directoryApi.Initial();
+            var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", data.directory);
             postTask.Wait();
 
             var result = postTask.Result;

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DirectoryManager.UI.Models.DirectoryData>
+﻿@model IEnumerable<DirectoryManager.UI.Models.DirectoryModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -44,7 +44,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", item) |
-                @Html.ActionLink("Details", "Details", new { id=item.UUID }) |
+                @Html.ActionLink("Details", "Details",  item) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.UUID })
             </td>
         </tr>
