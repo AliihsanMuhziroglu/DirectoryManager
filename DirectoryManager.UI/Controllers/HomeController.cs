@@ -1,14 +1,14 @@
 ﻿using DirectoryManager.UI.Helper;
 using DirectoryManager.UI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace DirectoryManager.UI.Controllers
 {
@@ -27,7 +27,7 @@ namespace DirectoryManager.UI.Controllers
             List<DirectoryData> directories = new List<DirectoryData>();
             HttpClient client = _directoryApi.Initial();
             HttpResponseMessage res = await client.GetAsync("Directories");
-            if(res.IsSuccessStatusCode)
+            if (res.IsSuccessStatusCode)
             {
                 var results = res.Content.ReadAsStringAsync().Result;
                 directories = JsonConvert.DeserializeObject<List<DirectoryData>>(results);
@@ -40,7 +40,7 @@ namespace DirectoryManager.UI.Controllers
             var directory = new DirectoryData();
             HttpClient client = _directoryApi.Initial();
             HttpResponseMessage res = await client.GetAsync($"Directories/{id}");
-            if(res.IsSuccessStatusCode)
+            if (res.IsSuccessStatusCode)
             {
                 var results = res.Content.ReadAsStringAsync().Result;
                 directory = JsonConvert.DeserializeObject<DirectoryData>(results);
@@ -48,7 +48,7 @@ namespace DirectoryManager.UI.Controllers
             return View(directory.ContactList);
         }
 
-        
+
         public IActionResult Create()
         {
             return View();
@@ -62,12 +62,20 @@ namespace DirectoryManager.UI.Controllers
             postTask.Wait();
 
             var result = postTask.Result;
-            if(result.IsSuccessStatusCode)
+            if (result.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
             return View();
 
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            var directory = new DirectoryData();
+            HttpClient client = _directoryApi.Initial();
+            HttpResponseMessage res = await client.DeleteAsync($"Directories/{id}");
+            return RedirectToAction("Index");
         }
 
 
