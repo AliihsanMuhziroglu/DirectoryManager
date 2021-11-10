@@ -13,6 +13,6 @@ namespace DirectoryManager.Core
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Company { get; set; }
-        public string ContactInfo { get; set; } //TODO class yapılacak
+        public List<ContactInfo> ContactList { get; set; } 
     }
 }
