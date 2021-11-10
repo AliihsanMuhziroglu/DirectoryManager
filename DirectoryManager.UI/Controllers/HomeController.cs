@@ -78,6 +78,29 @@ namespace DirectoryManager.UI.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Edit(DirectoryData directory)
+        {
+            return View(directory);
+        }
+
+        [HttpPost]
+        public IActionResult EditData(DirectoryData directory)
+        {
+            HttpClient client = _directoryApi.Initial();
+            var postTask = client.PutAsJsonAsync<DirectoryData>("Directories", directory);
+            postTask.Wait();
+
+            var result = postTask.Result;
+            if (result.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        }
+
+
+
 
 
         public IActionResult Privacy()
