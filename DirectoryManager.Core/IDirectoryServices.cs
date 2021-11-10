@@ -9,7 +9,8 @@ namespace DirectoryManager.Core
         List<Directory> GetDirectories();
         Directory GetDirectory(string id);
         Directory AddDirectory(Directory directory);
-
+        void DeleteDirectory(string id);
+        Directory UpdateDirectory(Directory directory);
 
     }
 }
