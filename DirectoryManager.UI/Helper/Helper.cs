@@ -11,7 +11,7 @@ namespace DirectoryManager.UI.Helper
         public HttpClient Initial()
         {
             var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44316/");
+            client.BaseAddress = new Uri("https://localhost:44309/");
             return client;
         }
     }
