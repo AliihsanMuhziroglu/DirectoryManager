@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace DirectoryManager.UI.Controllers
 {
@@ -47,6 +47,30 @@ namespace DirectoryManager.UI.Controllers
             }
             return View(directory.ContactList);
         }
+
+        
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(DirectoryData directory)
+        {
+            HttpClient client = _directoryApi.Initial();
+            var postTask = client.PostAsJsonAsync<DirectoryData>("Directories", directory);
+            postTask.Wait();
+
+            var result = postTask.Result;
+            if(result.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        }
+
+
 
         public IActionResult Privacy()
         {
