@@ -35,6 +35,19 @@ namespace DirectoryManager.UI.Controllers
             return View(directories);
         }
 
+        public async Task<IActionResult> Details(string id)
+        {
+            var directory = new DirectoryData();
+            HttpClient client = _directoryApi.Initial();
+            HttpResponseMessage res = await client.GetAsync($"Directories/{id}");
+            if(res.IsSuccessStatusCode)
+            {
+                var results = res.Content.ReadAsStringAsync().Result;
+                directory = JsonConvert.DeserializeObject<DirectoryData>(results);
+            }
+            return View(directory.ContactList);
+        }
+
         public IActionResult Privacy()
         {
             return View();
