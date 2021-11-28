@@ -56,6 +56,16 @@ namespace DirectoryManager.UI.Controllers
             return directory;
         }
 
+        public HttpResponseMessage UpdateDirectory(DirectoryModel directory)
+        {
+            HttpClient client = _directoryApi.Initial();
+            var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", directory);
+            postTask.Wait();
+
+            var result = postTask.Result;
+            return result;
+        }
+
 
         public IActionResult Create()
         {
@@ -91,14 +101,12 @@ namespace DirectoryManager.UI.Controllers
             return View(directory);
         }
 
+
+
         [HttpPost]
         public IActionResult EditData(DirectoryModel directory)
-        {
-            HttpClient client = _directoryApi.Initial();
-            var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", directory);
-            postTask.Wait();
-
-            var result = postTask.Result;
+        { 
+            var result = UpdateDirectory(directory);
             if (result.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -119,8 +127,21 @@ namespace DirectoryManager.UI.Controllers
             return View(createContactInfoModel);
         }
 
+        public async Task<IActionResult> EditContactInfo(EditContactInfoModel data)
+        {
+            var dir = await GetDirectoryByUUID(data.UUID);
+            var createContactInfoModel = new CreateContactInfoModel
+            {
+                directory = dir,
+                contactInfo = dir.ContactList.Find(z => z.ContactId == data.ContactId)
+            };
+            return View(createContactInfoModel);
+        }
 
  
+
+
+
 
 
         [HttpPost]
@@ -131,13 +152,36 @@ namespace DirectoryManager.UI.Controllers
                 dir.ContactList = new List<ContactInfoModel>();
             data.contactInfo.ContactId = Guid.NewGuid().ToString();
             dir.ContactList.Add(data.contactInfo);
-            HttpClient client = _directoryApi.Initial();
-            var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", dir);
-            postTask.Wait();
 
-            var result = postTask.Result;
+
+            var result = UpdateDirectory(dir);
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EditContactInfoData(CreateContactInfoModel data)
+        {
+            var dir = await GetDirectoryByUUID(data.directory.UUID);
+            var itemToRemove = dir.ContactList.Find(x => x.ContactId == data.contactInfo.ContactId);
+            dir.ContactList.Remove(itemToRemove);
+            dir.ContactList.Add(data.contactInfo);
+              
+            var result = UpdateDirectory(dir);
+            return RedirectToAction("Index");
+        }
+         
+        public async Task<IActionResult> DeleteContactInfo(EditContactInfoModel data)
+        {
+            var dir = await GetDirectoryByUUID(data.UUID);
+            var itemToRemove = dir.ContactList.Find(x => x.ContactId == data.ContactId);
+            dir.ContactList.Remove(itemToRemove); 
+
+            var result = UpdateDirectory(dir);
+            return RedirectToAction("Index");
+        }
+
+ 
+
 
 
 

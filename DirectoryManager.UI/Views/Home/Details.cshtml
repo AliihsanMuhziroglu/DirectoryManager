@@ -49,9 +49,8 @@
                 @Html.DisplayFor(modelItem => item.Location)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit Contact Info", "EditContactInfo", new EditContactInfoModel { ContactId = item.ContactId, UUID = Model.UUID }) |
+                @Html.ActionLink("Delete Contact Info", "DeleteContactInfo", new EditContactInfoModel { ContactId = item.ContactId, UUID = Model.UUID })
             </td>
         </tr>
         }
