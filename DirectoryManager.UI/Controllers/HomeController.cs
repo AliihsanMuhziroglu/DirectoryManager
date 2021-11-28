@@ -35,11 +35,17 @@ namespace DirectoryManager.UI.Controllers
             return View(directories);
         }
 
-        public async Task<IActionResult> Details(DirectoryModel directoryData)
+        public async Task<IActionResult> Details(DirectoryModel directoryModel)
+        {
+            var directory = await GetDirectoryByUUID(directoryModel.UUID);
+            return View(directory);
+        }
+
+        public async Task<DirectoryModel> GetDirectoryByUUID(string uuid)
         {
             var directory = new DirectoryModel();
             HttpClient client = _directoryApi.Initial();
-            HttpResponseMessage res = await client.GetAsync($"Directories/{directoryData.UUID}");
+            HttpResponseMessage res = await client.GetAsync($"Directories/{uuid}");
             if (res.IsSuccessStatusCode)
             {
                 var results = res.Content.ReadAsStringAsync().Result;
@@ -47,7 +53,7 @@ namespace DirectoryManager.UI.Controllers
             }
             if (directory.ContactList == null)
                 directory.ContactList = new List<ContactInfoModel>();
-            return View(directory);
+            return directory;
         }
 
 
@@ -102,11 +108,12 @@ namespace DirectoryManager.UI.Controllers
         }
 
 
-        public IActionResult CreateContactInfo(DirectoryModel directory)
+        public async Task<IActionResult> CreateContactInfo(DirectoryModel directory)
         {
+            var dir = await GetDirectoryByUUID(directory.UUID);
             var createContactInfoModel = new CreateContactInfoModel
             {
-                directory = directory,
+                directory = dir,
                 contactInfo = new ContactInfoModel()
             };
             return View(createContactInfoModel);
@@ -117,22 +124,18 @@ namespace DirectoryManager.UI.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateContactInfoData(CreateContactInfoModel data)
+        public async Task<IActionResult> CreateContactInfoData(CreateContactInfoModel data)
         {
-            if (data.directory.ContactList == null)
-                data.directory.ContactList = new List<ContactInfoModel>();
-            data.directory.ContactList.Add(data.contactInfo);
+            var dir = await GetDirectoryByUUID(data.directory.UUID);
+            if (dir.ContactList == null)
+                dir.ContactList = new List<ContactInfoModel>();
+            dir.ContactList.Add(data.contactInfo);
             HttpClient client = _directoryApi.Initial();
-            var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", data.directory);
+            var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", dir);
             postTask.Wait();
 
             var result = postTask.Result;
-            if (result.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index");
-            }
-            return View();
-
+            return RedirectToAction("Index");
         }
 
 
