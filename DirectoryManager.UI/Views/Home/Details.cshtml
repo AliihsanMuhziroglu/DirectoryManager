@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <p>
-    @Html.ActionLink("Create Contact Info", "CreateContactInfo", new { DirectoryModel = Model})
+    @Html.ActionLink("Create Contact Info", "CreateContactInfo", Model)
 </p>
 
 <label asp-for="UUID" class="control-label"></label>
@@ -17,6 +17,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                Contact Id
+            </th>
             <th>
                 Phone Number
             </th>
@@ -32,22 +35,24 @@
     <tbody>
         @foreach (var item in Model.ContactList)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.ActionLink("Edit Contact Info", "EditContactInfo", new EditContactInfoModel { ContactId = item.ContactId, UUID = Model.UUID }) |
+                @Html.ActionLink("Delete Contact Info", "DeleteContactInfo", new EditContactInfoModel { ContactId = item.ContactId, UUID = Model.UUID })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

@@ -1,27 +1,23 @@
 ﻿@model DirectoryManager.UI.Models.CreateContactInfoModel
-@{
-    ViewData["Title"] = "CreateContactInfo";
-}
 
-<h1>CreateContactInfo</h1>
+<h1>Edit Contact Info</h1>
 
-<h4>ContactInfoData</h4>
+<h4>Contact Info</h4>
 <hr />
-
-<p>
-    @Html.ActionLink("Create Contact Info", "CreateContactInfoData", Model)
-</p>
- 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateContactInfoData">
+        <form asp-action="EditContactInfoData">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="directory.UUID" class="control-label"></label>
                 <input asp-for="directory.UUID" class="form-control" readonly="readonly" />
                 <span asp-validation-for="directory.UUID" class="text-danger"></span>
             </div>
- 
+            <div class="form-group">
+                <label asp-for="contactInfo.ContactId" class="control-label"></label>
+                <input asp-for="contactInfo.ContactId" class="form-control" readonly="readonly" />
+                <span asp-validation-for="contactInfo.ContactId" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="contactInfo.PhoneNumber" class="control-label"></label>
                 <input asp-for="contactInfo.PhoneNumber" class="form-control" />
@@ -38,13 +34,11 @@
                 <span asp-validation-for="contactInfo.Location" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
- 
 
 <div>
     <a asp-action="Index">Back to List</a>
