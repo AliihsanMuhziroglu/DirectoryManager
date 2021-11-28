@@ -129,6 +129,7 @@ namespace DirectoryManager.UI.Controllers
             var dir = await GetDirectoryByUUID(data.directory.UUID);
             if (dir.ContactList == null)
                 dir.ContactList = new List<ContactInfoModel>();
+            data.contactInfo.ContactId = Guid.NewGuid().ToString();
             dir.ContactList.Add(data.contactInfo);
             HttpClient client = _directoryApi.Initial();
             var postTask = client.PutAsJsonAsync<DirectoryModel>("Directories", dir);
